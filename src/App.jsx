@@ -5,8 +5,8 @@ import React, {useState} from 'react';
 //icon: `http://openweathermap.org/img/wn/${res.weather[0].icon}@2x.png`
 //req: http://api.openweathermap.org/data/2.5/weather?q=الرياض&appid=33b1ba5876d98dff6c671ca5f92f5c5a&units=metric&lang=ar
 const weatherApi={
-  key : "33b1ba5876d98dff6c671ca5f92f5c5a",
-  baseUrl : "http://api.openweathermap.org/data/2.5/weather"
+  key : "b74c7e0f6d39c491740220eff483faa7",
+  baseUrl : "http://api.openweathermap.org/data/2.5/weather",
 }
 
 // fot image api
@@ -31,8 +31,35 @@ const weatherApi={
 
 //res.value[1].thumbnailUrl
 
+
 function App() {
-  const [query, setQuery] =useSta
+  const axios = require('axios');
+
+  const [query, setQuery] =useState('');
+  const [weather, setWeather] = useState({});
+
+  const search = event =>{
+    if(event.key ==="Enter"){
+      axios.get(`${weatherApi.baseUrl}?q=${query}&appid=${weatherApi.key}&units=metric`)
+      .then(function (response) {
+        // handle success
+        console.log(response);
+        console.log("name"+response.data.name);
+        setWeather(response.data);
+        setQuery('');
+        console.log(typeof weather.main)
+        
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+    }
+  }
+
   let today = new Date().toDateString();
   return (
     <div className="App" style={{
@@ -44,16 +71,25 @@ function App() {
          type="text"
          className="search-bar"
          placeholder="Search ..."
+         onChange= {e => setQuery(e.target.value)}
+         value={query}
+         onKeyPress={search}
          />
        </div>
-       <div className="location-box">
-         <div className="location">Riyadh, KSA</div>
-         <div className="date">{today}</div>
-       </div>
-       <div className="weather-box">
-         <div className="temp">36c</div>
-         <div className="weather">Sunny</div>
-       </div>
+       {(typeof(weather.main) != "undefined" )? (
+         <div>
+            <div className="location-box">
+              <div className="location">{weather.name}, {weather.sys.country}</div>
+              <div className="date">{today}</div>
+            </div>
+            <div className="weather-box">
+              <div className="temp">{weather.main.temp}c</div>
+              <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon"/>
+              <div className="weather">{weather.weather[0].description}</div>
+            </div>
+         </div>
+       ):('')}
+      
      </main>
     </div>
   );
