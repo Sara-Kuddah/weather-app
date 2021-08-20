@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 // my key: 33b1ba5876d98dff6c671ca5f92f5c5a
 //icon: `http://openweathermap.org/img/wn/${res.weather[0].icon}@2x.png`
@@ -37,6 +37,10 @@ function App() {
 
   const [query, setQuery] =useState('');
   const [weather, setWeather] = useState({});
+  const [description, setDescription] =useState('');
+  const [img, setImg] = useState('');
+  const [timezone, setTimezone] =useState(' day')
+  var icon;
 
   const search = event =>{
     if(event.key ==="Enter"){
@@ -46,6 +50,10 @@ function App() {
         console.log(response);
         console.log("name"+response.data.name);
         setWeather(response.data);
+        setDescription(response.data.weather[0].description)
+        icon=response.data.weather[0].icon; 
+        console.log("icon "+ icon[2])
+        setTimezone(icon[2] === 'd' ?" afternoon" : " night")
         setQuery('');
         console.log(typeof weather.main)
         
@@ -57,13 +65,36 @@ function App() {
       .then(function () {
         // always executed
       });
+
+
+  
     }
   }
+
+  useEffect(() => {
+    const axios = require('axios');
+    const options = {
+      method: 'GET',
+      url: 'https://bing-image-search1.p.rapidapi.com/images/search',
+      params: {q: description+ timezone},
+      headers: {
+        'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com',
+        'x-rapidapi-key': '5c518b29ebmshcf349ff9f44df5dp126a5fjsna03a7c573f90'
+      }
+    };
+    
+ axios.request(options).then(function (response) {
+	console.log(response.data);
+  setImg(response.data.value[1].thumbnailUrl)
+}).catch(function (error) {
+	console.error(error);
+});
+  }, [ timezone]);
 
   let today = new Date().toDateString();
   return (
     <div className="App" style={{
-      backgroundImage: "url(https://tse4.mm.bing.net/th?id=OIP.1ZmgpC4nlY142KyUB_OSegHaEK&pid=Api)"}}
+      backgroundImage: `url(${img})`}}
 >
      <main>
        <div className="search-box">
@@ -84,7 +115,7 @@ function App() {
             </div>
             <div className="weather-box">
               <div className="temp">{weather.main.temp}c</div>
-              <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon"/>
+              {/* <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon"/> */}
               <div className="weather">{weather.weather[0].description}</div>
             </div>
          </div>

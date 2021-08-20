@@ -10,7 +10,7 @@ body{
 }
 
 .App{
-  background-image: url('https://tse4.mm.bing.net/th?id=OIP.qRJeH5a7lJAmrCNaw4knMQHaE8&pid=Api');
+  background-image: url('https://tse4.mm.bing.net/th?id=OIP.1ZmgpC4nlY142KyUB_OSegHaEK&pid=Api');
   background-size: cover;
   background-position:center;
   transition: 0.4 ease-out;
@@ -78,7 +78,7 @@ main{
 
   padding: 15px 25px;
   color: #FFF;
-  font-size: 102px;
+  font-size: 90px;
   font-weight: 900;
   
   text-shadow: 3px 6px rgba(50,50,70,0.5);
