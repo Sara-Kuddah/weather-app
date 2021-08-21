@@ -13,7 +13,7 @@ body{
   background-image: url('https://tse4.mm.bing.net/th?id=OIP.1ZmgpC4nlY142KyUB_OSegHaEK&pid=Api');
   background-size: cover;
   background-position:center;
-  transition: 0.4 ease-out;
+  transition: 0.4s ease-in-out;
 }
 
 main{

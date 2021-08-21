@@ -39,7 +39,7 @@ function App() {
   const [weather, setWeather] = useState({});
   const [description, setDescription] =useState('');
   const [img, setImg] = useState('');
-  const [timezone, setTimezone] =useState(' day')
+  const [imgQ, setImgQ] =useState('')
   var icon;
 
   const search = event =>{
@@ -53,7 +53,7 @@ function App() {
         setDescription(response.data.weather[0].description)
         icon=response.data.weather[0].icon; 
         console.log("icon "+ icon[2])
-        setTimezone(icon[2] === 'd' ?" afternoon" : " night")
+        setImgQ(icon[2] === 'd' ? `${response.data.weather[0].description} afternoon` : `${response.data.weather[0].description} night`)
         setQuery('');
         console.log(typeof weather.main)
         
@@ -72,11 +72,12 @@ function App() {
   }
 
   useEffect(() => {
+    
     const axios = require('axios');
     const options = {
       method: 'GET',
       url: 'https://bing-image-search1.p.rapidapi.com/images/search',
-      params: {q: description+ timezone},
+      params: {q: imgQ},
       headers: {
         'x-rapidapi-host': 'bing-image-search1.p.rapidapi.com',
         'x-rapidapi-key': '5c518b29ebmshcf349ff9f44df5dp126a5fjsna03a7c573f90'
@@ -89,13 +90,20 @@ function App() {
 }).catch(function (error) {
 	console.error(error);
 });
-  }, [ timezone]);
+  }, [imgQ]);
 
   let today = new Date().toDateString();
   return (
-    <div className="App" style={{
-      backgroundImage: `url(${img})`}}
+    <div className="App" style={ (typeof weather.main != "undefined")?
+    { backgroundImage: `url(${img})`} :
+    { backgroundImage: `url(https://tse4.mm.bing.net/th?id=OIP.1ZmgpC4nlY142KyUB_OSegHaEK&pid=Api)`}}
 >
+  {/* 
+  (typeof weather.main != "undefined")?
+   { backgroundImage: `url(${img})`} :
+   { backgroundImage: `url(https://tse4.mm.bing.net/th?id=OIP.1ZmgpC4nlY142KyUB_OSegHaEK&pid=Api)`}
+
+   */}
      <main>
        <div className="search-box">
          <input
@@ -114,7 +122,7 @@ function App() {
               <div className="date">{today}</div>
             </div>
             <div className="weather-box">
-              <div className="temp">{weather.main.temp}c</div>
+              <div className="temp">{parseInt(weather.main.temp)}°c</div>
               {/* <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon"/> */}
               <div className="weather">{weather.weather[0].description}</div>
             </div>
